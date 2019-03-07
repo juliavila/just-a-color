@@ -1,11 +1,31 @@
 extends StaticBody2D
 
+onready var particle = preload("res://RoundParticles/RoundParticle.tscn")
+
 const SPEED = .5
+const RADIUS = 128
+
+var numParticles = 0
+var color
+
+var particles_array = []
 
 func _ready():
-	# Called when the node is added to the scene for the first time.
-	# Initialization here
-	pass
+	
+	var center = Vector2(0, 0)	
+		
+	for i in numParticles:
+		
+		var particle_instance = particle.instance()
+		
+		if numParticles == 1 :
+			particle_instance.position = center
+		elif numParticles > 1:
+			particle_instance.position.x = center.x + cos((PI / numParticles) * i * 2) * RADIUS
+			particle_instance.position.y = center.y + sin((PI / numParticles) * i * 2) * RADIUS
+		
+		add_child(particle_instance)
+		particles_array.append(particle_instance)
 
 #func _process(delta):
 #	# Called every frame. Delta is time since last frame.
@@ -13,4 +33,7 @@ func _ready():
 #	pass
 
 func _physics_process(delta):
-	rotate(PI * (SPEED * delta))
+	
+	if numParticles > 1:
+		rotate(PI * (SPEED * delta))
+	
