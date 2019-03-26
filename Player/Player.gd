@@ -1,33 +1,71 @@
 extends KinematicBody2D
 
-const GRAVITY = 200.0
-const WALK_SPEED = 200
-const JUMP_SPEED = -200
-const MIN_JUMP = -500
-
-var velocity = Vector2()
-
 onready var tile_color = get_node("")
 
+var input_direction = 0
+var direction = 0
+
+var speed_x = 0
+var speed_y = 0
+var velocity = Vector2()
+
+const MAX_SPEED = 60000
+const ACCELERATION = 10000
+const DECELERATION = 20000
+
+const JUMP_FORCE = 500
+const GRAVITY = 500
+
 func _ready():
-	# Called when the node is added to the scene for the first time.
-	# Initialization here
 	pass
+	
+#func _input(event):
+#	if event.is_action_pressed("ui_up"):
+#		velocity.y += -JUMP_FORCE * delta
+		
 
 func _physics_process(delta):
-	velocity.y += delta * GRAVITY
-
+	
+	if input_direction:
+		direction = input_direction
+		
+	if Input.is_action_just_pressed("ui_up"):
+		#speed_y = -JUMP_FORCE * delta
+		#velocity.y += -JUMP_FORCE * delta
+		print(speed_y)
+		
+	input_direction = get_direction()
+	
+	velocity.x = calc_velocity_x(delta)
+	
+	#speed_y += GRAVITY * delta
+	velocity.y += GRAVITY * delta
+	
+	print(speed_y)
+	
+	move_and_slide(velocity)
+	
+func get_direction():
+	
 	if Input.is_action_pressed("ui_left"):
-		velocity.x = -WALK_SPEED
+		return -1
 	elif Input.is_action_pressed("ui_right"):
-		velocity.x =  WALK_SPEED
-	elif Input.is_action_pressed("ui_up"):
-		velocity.y = JUMP_SPEED
-	else:
-		velocity.x = 0
-
-    # We don't need to multiply velocity by delta because MoveAndSlide already takes delta time into account.
-
-    # The second parameter of move_and_slide is the normal pointing up.
-    # In the case of a 2d platformer, in Godot upward is negative y, which translates to -1 as a normal.
-	move_and_slide(velocity, Vector2(0, -1))
+		return 1
+	
+	return 0
+	
+func calc_velocity_x(delta):
+	
+	if input_direction == -direction:
+		speed_x /= 3
+		
+	if input_direction:
+		speed_x += ACCELERATION * delta
+	else: 
+		speed_x -= DECELERATION * delta
+		
+	speed_x = clamp(speed_x, 0, MAX_SPEED)
+	
+	return speed_x * delta * direction
+	
+	
