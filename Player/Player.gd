@@ -13,7 +13,7 @@ const MAX_SPEED = 60000
 const ACCELERATION = 10000
 const DECELERATION = 20000
 
-const JUMP_FORCE = 500
+const JUMP_FORCE = -500
 const GRAVITY = 500
 
 func _ready():
@@ -29,19 +29,20 @@ func _physics_process(delta):
 	if input_direction:
 		direction = input_direction
 		
-	if Input.is_action_just_pressed("ui_up"):
-		#speed_y = -JUMP_FORCE * delta
-		#velocity.y += -JUMP_FORCE * delta
-		print(speed_y)
+		
+	if Input.is_action_just_pressed("ui_up") and $RayCast2D.is_colliding():
+		#speed_y = JUMP_FORCE
+		velocity.y = JUMP_FORCE
+
 		
 	input_direction = get_direction()
 	
 	velocity.x = calc_velocity_x(delta)
 	
-	#speed_y += GRAVITY * delta
-	velocity.y += GRAVITY * delta
+	speed_y += GRAVITY * delta
 	
-	print(speed_y)
+	print (speed_y)
+	velocity.y += speed_y * delta
 	
 	move_and_slide(velocity)
 	
