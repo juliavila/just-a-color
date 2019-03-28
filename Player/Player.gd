@@ -9,11 +9,11 @@ var speed_x = 0
 var speed_y = 0
 var velocity = Vector2()
 
-const MAX_SPEED = 60000
-const ACCELERATION = 10000
-const DECELERATION = 20000
+const MAX_SPEED = 50000
+const ACCELERATION = 40000
+const DECELERATION = 90000
 
-const JUMP_FORCE = -500
+const JUMP_FORCE = -200
 const GRAVITY = 500
 
 func _ready():
@@ -41,10 +41,14 @@ func _physics_process(delta):
 	
 	speed_y += GRAVITY * delta
 	
-	print (speed_y)
 	velocity.y += speed_y * delta
+	print (velocity.y)
 	
 	move_and_slide(velocity)
+	
+	if ($RayCast2D.is_colliding()):
+		speed_y = 0;
+
 	
 func get_direction():
 	
