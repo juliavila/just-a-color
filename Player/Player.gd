@@ -9,12 +9,14 @@ var speed_x = 0
 var speed_y = 0
 var velocity = Vector2()
 
-const MAX_SPEED = 50000
-const ACCELERATION = 40000
+const MAX_SPEED = 20000
+const ACCELERATION = 35000
 const DECELERATION = 90000
 
-const JUMP_FORCE = -200
-const GRAVITY = 500
+const JUMP_FORCE = -340
+const GRAVITY = 750
+
+const normal_floor =  Vector2(0, -1)
 
 func _ready():
 	pass
@@ -28,27 +30,13 @@ func _physics_process(delta):
 	
 	if input_direction:
 		direction = input_direction
-		
-		
-	if Input.is_action_just_pressed("ui_up") and $RayCast2D.is_colliding():
-		#speed_y = JUMP_FORCE
-		velocity.y = JUMP_FORCE
-
-		
+			
 	input_direction = get_direction()
 	
 	velocity.x = calc_velocity_x(delta)
-	
-	speed_y += GRAVITY * delta
-	
-	velocity.y += speed_y * delta
-	print (velocity.y)
-	
-	move_and_slide(velocity)
-	
-	if ($RayCast2D.is_colliding()):
-		speed_y = 0;
+	velocity.y = calc_velocity_y(delta)
 
+	move_and_slide(velocity, normal_floor)
 	
 func get_direction():
 	
@@ -59,14 +47,29 @@ func get_direction():
 	
 	return 0
 	
+func calc_velocity_y(delta):
+	
+	if is_on_floor():
+		speed_y = 0		
+		if Input.is_action_just_pressed("ui_up"):
+			speed_y = JUMP_FORCE
+			
+	speed_y += GRAVITY * delta
+	
+	return speed_y;
+	
 func calc_velocity_x(delta):
 	
 	if input_direction == -direction:
 		speed_x /= 3
 		
-	if input_direction:
-		speed_x += ACCELERATION * delta
-	else: 
+	if input_direction && !is_on_wall():
+		if is_on_floor():
+			speed_x += ACCELERATION * delta
+		else:
+			speed_x += ACCELERATION/2 * delta 
+			
+	if !input_direction: 
 		speed_x -= DECELERATION * delta
 		
 	speed_x = clamp(speed_x, 0, MAX_SPEED)
