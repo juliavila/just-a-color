@@ -23,7 +23,7 @@ func _ready():
 	
 #func _input(event):
 #	if event.is_action_pressed("ui_up"):
-#		velocity.y += -JUMP_FORCE * delta
+#		pass
 		
 
 func _physics_process(delta):

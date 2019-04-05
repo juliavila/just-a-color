@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Player/Player.gd" type="Script" id=1]
 [ext_resource path="res://Assets/tile.png" type="Texture" id=2]
-[ext_resource path="res://Player/Sprite.gd" type="Script" id=3]
+[ext_resource path="res://ColorManager/ColorManager.tscn" type="PackedScene" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -22,11 +22,12 @@ script = ExtResource( 1 )
 ]]
 
 texture = ExtResource( 2 )
-script = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="1"]
 
 shape = SubResource( 1 )
 _sections_unfolded = [ "Transform" ]
+
+[node name="ColorManager" parent="." index="2" instance=ExtResource( 3 )]
 
 
