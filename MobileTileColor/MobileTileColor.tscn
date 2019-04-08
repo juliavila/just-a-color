@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://MobileTileColor/MobileTileColor.gd" type="Script" id=1]
+[ext_resource path="res://ColorManager/ColorManager.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Assets/tile.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+
+custom_solver_bias = 0.0
+extents = Vector2( 10, 10 )
+
+[node name="MobileTileColor" type="KinematicBody2D" index="0"]
+
+input_pickable = false
+collision_layer = 4
+collision_mask = 4
+collision/safe_margin = 0.08
+script = ExtResource( 1 )
+_sections_unfolded = [ "Collision" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
+
+scale = Vector2( 3.1, 3.1 )
+shape = SubResource( 1 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="ColorManager" parent="." index="1" instance=ExtResource( 2 )]
+
+[node name="Sprite" type="Sprite" parent="." index="2"]
+
+texture = ExtResource( 3 )
+
+
